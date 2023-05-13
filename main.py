@@ -4,6 +4,7 @@ author : yydshmcl@outlook.com
 version : v0.0.5
 Design date : 2022/3/12
 """
+import webbrowser
 import sys
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
@@ -126,7 +127,7 @@ def runpy():
 def no():
     answer = tk.messagebox.askokcancel('该功能正在制作中','选择确定查看详情，选择取消关闭弹窗')
     if answer:
-        pass
+        webbrowser.open('https://github.com/Buelie/Machine')
     else:
         pass
 
@@ -166,7 +167,7 @@ helptmenu.add_command(label="关于我们", command=no)
 helptmenu.add_command(label="获取帮助", command=no)
 MenuBar.add_cascade(label="帮助", menu=helptmenu)
 
-menu = tk.Menu(root,bg="#000",fg="#FFF")
+menu = tk.Menu(root,bg="#000",fg="#FFF",tearoff=False)
 menu.add_cascade(label = '复制',command=no)
 menu.add_cascade(label = '粘贴',command=no)
 menu.add_cascade(label = '运行',command=runpy)
