@@ -1,39 +1,56 @@
 # -*- coding: utf-8 -*-
+
 """
 author : yydshmcl@outlook.com
-version : v0.0.5
 Design date : 2022/3/12
 """
+
 import webbrowser
 import sys
 import tkinter as tk
 from tkinter.scrolledtext import ScrolledText
 from tkinter.filedialog import *
 import tkinter.colorchooser
+import function.index
+import api
+
+index = function.index
 
 root = tk.Tk()
 textPad= ScrolledText(bg='white', height=10)
 textPad.pack(fill=tk.BOTH, expand=1)
 textPad.focus_set()
 
+SetFile = index.parse("config").json()
+
 def IDESetWind():
     winNew = tk.Toplevel(root)
     winNew.geometry('600x450+374+182')
     winNew.title('IDE设置')
-    def bgcolor():
-          BgColor = tkinter.colorchooser.askcolor()
-          return BgColor
-    bgButton = tk.Button(winNew,text="选择背景色",command=bgcolor).pack()
+
+    def SetBg(bg = "#000",fg = "#FFF") -> None:
+        SetFile['Bg'] = bg
+        SetFile['Fg'] = fg
+        with open("config/set.json") as file:
+            file.write(SetFile)
+            file.close
+        return None
+
+    def bgcolor() -> str:
+        BgColor = tkinter.colorchooser.askcolor()
+        SetBg(BgColor)
+        return BgColor
+    bgButton = tk.Button(winNew,text="选择背景色",command=no).pack()
 
 def FileSetWind():
-      winNew = tk.Toplevel(root)
-      winNew.geometry('600x450+374+182')
-      winNew.title('文件设置')
+    winNew = tk.Toplevel(root)
+    winNew.geometry('600x450+374+182')
+    winNew.title('文件设置')
 
 def CSSetWind():
-      winNew = tk.Toplevel(root)
-      winNew.geometry('600x450+374+182')
-      winNew.title('参数设置')
+    winNew = tk.Toplevel(root)
+    winNew.geometry('600x450+374+182')
+    winNew.title('参数设置')
 
 def NewFile():  #新文件
     textPad.delete(1.0,tk.END)
@@ -54,6 +71,23 @@ def SaveFile(): #另存文件
         fh.write(msg)
         fh.close()
 
+def EXEInfo():
+    winNew = tk.Toplevel(root)
+    winNew.geometry('600x450+374+182')
+    winNew.title('软件信息')
+    ver = index.parse("config/config.json").json()
+    lb = tk.Label(winNew,text=f'软件版本 : {ver["ExeVer"]}').pack()
+    lb2 = tk.Label(winNew,text=f'核心版本 : {ver["version"]}').pack()
+    lb3 = tk.Label(winNew,text=f'当前主题 : {ver["topic"]}').pack()
+    lb4 = tk.Label(winNew,text=f'贡献者 : {ver["contributors"]}').pack()
+    lb5 = tk.Label(winNew,text=f'源码托管平台 : {ver["platform"]}').pack()
+
+def Plugin():
+    winNew = tk.Toplevel(root)
+    winNew.geometry('600x450+374+182')
+    winNew.title('插件')
+    lb = tk.Label(winNew,text=f'已安装插件列表').pack()
+    lb2 = tk.Label(winNew,text=f'{api.alert().GetPlugin()}').pack()
 
 def showPopoutMenu(w, menu):
     def popout(event):
@@ -165,6 +199,8 @@ MenuBar.add_cascade(label="设置", menu=settingmenu)
 helptmenu = tk.Menu(MenuBar,tearoff=False,bg="#000",fg="#FFF")
 helptmenu.add_command(label="关于我们", command=no)
 helptmenu.add_command(label="获取帮助", command=no)
+helptmenu.add_command(label="软件信息", command=EXEInfo)
+helptmenu.add_command(label="插件", command=Plugin)
 MenuBar.add_cascade(label="帮助", menu=helptmenu)
 
 menu = tk.Menu(root,bg="#000",fg="#FFF",tearoff=False)
@@ -172,10 +208,12 @@ menu.add_cascade(label = '复制',command=no)
 menu.add_cascade(label = '粘贴',command=no)
 menu.add_cascade(label = '运行',command=runpy)
 showPopoutMenu(root, menu)
+
 # 显示菜单
 root.config(menu=MenuBar)
 
 #窗口设置
+root.iconphoto(True,tk.PhotoImage(file="image/cobweb.png"))
 root.bind('<F9>',runpy)
 root.geometry("600x450+374+182")
 root.title("清云IDE")
