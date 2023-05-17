@@ -30,3 +30,6 @@
 | [简体中文]() |
 | [繁體中文]() |
 | [日本語]() |
+
+# plugin development？
+[【Plugin docs】]()
