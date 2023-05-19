@@ -20,4 +20,4 @@
 | `Python` | *python3.8+* | 较多(More) |
 | `Java` | *JDK15+* | 正常(normal) |
 
-#### [下一页]()
+#### [下一页](https://github.com/Buelie/Machine/tree/Docs/Plugin/01/01)
