@@ -13,10 +13,22 @@ from tkinter.filedialog import *
 import tkinter.colorchooser
 import function.index
 import api
+from tkinter import ttk
+import json
 
 index = function.index
 
 root = tk.Tk()
+
+FileTree = ttk.Treeview(root)
+
+FTreeOne = FileTree.insert("", 0, "测试版", text="测试版，暂时无法显示文件树", values=("F1"))
+
+FtreeTwo = FileTree.insert(FTreeOne,1,"cs",text="了解更多请访问官网！！！", values=("F2"))
+
+FileTree.pack(side='left',anchor='w',fill='both')
+
+
 textPad= ScrolledText(bg='white', height=10)
 textPad.pack(fill=tk.BOTH, expand=1)
 textPad.focus_set()
@@ -76,18 +88,18 @@ def EXEInfo():
     winNew.geometry('600x450+374+182')
     winNew.title('软件信息')
     ver = index.parse("config/config.json").json()
-    lb = tk.Label(winNew,text=f'软件版本 : {ver["ExeVer"]}').pack()
-    lb2 = tk.Label(winNew,text=f'核心版本 : {ver["version"]}').pack()
-    lb3 = tk.Label(winNew,text=f'当前主题 : {ver["topic"]}').pack()
-    lb4 = tk.Label(winNew,text=f'贡献者 : {ver["contributors"]}').pack()
-    lb5 = tk.Label(winNew,text=f'源码托管平台 : {ver["platform"]}').pack()
+    lb = tk.Label(winNew,text=f'软件版本 : {ver["ExeVer"]}',relief='solid').pack()
+    lb2 = tk.Label(winNew,text=f'核心版本 : {ver["version"]}',relief='solid').pack()
+    lb3 = tk.Label(winNew,text=f'当前主题 : {ver["topic"]}',relief='solid').pack()
+    lb4 = tk.Label(winNew,text=f'贡献者 : {ver["contributors"]}',relief='solid').pack()
+    lb5 = tk.Label(winNew,text=f'源码托管平台 : {ver["platform"]}',relief='solid').pack()
 
 def Plugin():
     winNew = tk.Toplevel(root)
     winNew.geometry('600x450+374+182')
     winNew.title('插件')
     lb = tk.Label(winNew,text=f'已安装插件列表').pack()
-    lb2 = tk.Label(winNew,text=f'{api.alert().GetPlugin()}').pack()
+    lb2 = tk.Label(winNew,text=f'{api.alert().GetPlugin()}',relief='solid').pack()
 
 def showPopoutMenu(w, menu):
     def popout(event):
@@ -165,14 +177,13 @@ def no():
     else:
         pass
 
-StartEXE = tk.Button(root,text="运行程序",command=runpy,height=1).pack(fill=tk.BOTH, expand=1)
-
+StartEXE = tk.Button(root,text="运行程序",command=runpy,width=100,relief='solid').pack()
 
 #菜单栏
-MenuBar = tk.Menu(root,bg="#000",fg="#FFF")
+MenuBar = tk.Menu(root,bg="#000",fg="#FFF",relief='solid')
 
 # 创建一个下拉菜单“文件”，然后将它添加到顶级菜单中
-filemenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF")
+filemenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF",relief='solid')
 filemenu.add_command(label="打开", command=GetFile)
 filemenu.add_command(label="保存", command=SaveFile)
 filemenu.add_command(label="新建", command=NewFile)
@@ -182,28 +193,28 @@ filemenu.add_command(label="退出", command=root.quit)
 MenuBar.add_cascade(label="文件", menu=filemenu)
  
 # 创建另一个“编辑”下拉菜单，然后将它添加到顶级菜单中
-EditMenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF")
+EditMenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF",relief='solid')
 EditMenu.add_command(label="剪切", command=no)
 EditMenu.add_command(label="拷贝", command=no)
 EditMenu.add_command(label="粘贴", command=no)
 MenuBar.add_cascade(label="编辑", menu=EditMenu)
  
 # 创建另一个“设置”下拉菜单，然后将它添加到顶级菜单中
-settingmenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF")
+settingmenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF",relief='solid')
 settingmenu.add_command(label="参数设置", command=CSSetWind)
 settingmenu.add_command(label="文件设置", command=FileSetWind)
 settingmenu.add_command(label="IDE设置", command=IDESetWind)
 MenuBar.add_cascade(label="设置", menu=settingmenu)
 
 # 创建另一个“帮助”下拉菜单，然后将它添加到顶级菜单中
-helptmenu = tk.Menu(MenuBar,tearoff=False,bg="#000",fg="#FFF")
+helptmenu = tk.Menu(MenuBar,tearoff=False,bg="#000",fg="#FFF",relief='solid')
 helptmenu.add_command(label="关于我们", command=no)
 helptmenu.add_command(label="获取帮助", command=no)
 helptmenu.add_command(label="软件信息", command=EXEInfo)
 helptmenu.add_command(label="插件", command=Plugin)
 MenuBar.add_cascade(label="帮助", menu=helptmenu)
 
-menu = tk.Menu(root,bg="#000",fg="#FFF",tearoff=False)
+menu = tk.Menu(root,bg="#000",fg="#FFF",tearoff=False,relief='solid')
 menu.add_cascade(label = '复制',command=no)
 menu.add_cascade(label = '粘贴',command=no)
 menu.add_cascade(label = '运行',command=runpy)
