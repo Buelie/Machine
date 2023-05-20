@@ -14,20 +14,31 @@ import tkinter.colorchooser
 import function.index
 import api
 from tkinter import ttk
-import json
-
+import os
 index = function.index
+
+ver = index.parse("config/config.json").json()
 
 root = tk.Tk()
 
+def Sys():
+    __data = os.name
+    if __data =='nt':
+        return '您的操作系统是Windows,异常检测：【无】'
+    elif __data == 'java':
+        return '您的运行环境是Java,异常检测：【无】'
+    else:
+        return '您的操作系统或者运行环境非Windows或Java，可能会出现部分未知错误,异常检测：【未知错误】'
+
 FileTree = ttk.Treeview(root)
-
 FTreeOne = FileTree.insert("", 0, "测试版", text="测试版，暂时无法显示文件树", values=("F1"))
-
 FtreeTwo = FileTree.insert(FTreeOne,1,"cs",text="了解更多请访问官网！！！", values=("F2"))
-
 FileTree.pack(side='left',anchor='w',fill='both')
 
+lable_sys = tk.Label(root,text=Sys())
+lable_sys.pack(side='top',anchor='w')#fill='both'
+
+stickup = ""
 
 textPad= ScrolledText(bg='white', height=10)
 textPad.pack(fill=tk.BOTH, expand=1)
@@ -50,19 +61,22 @@ def IDESetWind():
 
     def bgcolor() -> str:
         BgColor = tkinter.colorchooser.askcolor()
-        SetBg(BgColor)
         return BgColor
-    bgButton = tk.Button(winNew,text="选择背景色",command=no).pack()
+    bgButton = ttk.Button(winNew,text="选择背景色",command=bgcolor).pack()
+
+def ConfigWind():
+    winNew = tk.Toplevel(root)
+    winNew.geometry('600x450+374+182')
+    winNew.title('参数设置')
+    hj_path = ""
+    PathLab = ttk.Label(winNew,text=sys.path[5]+"\\python.exe",relief='solid').grid(row=0,column=1,columnspan=2)
+    PathBtn = ttk.Button(winNew,text="更改解释器路径").grid(padx=0,row=0,column=0)
+    DabaoBtn = ttk.Button(winNew,text="打包项目").grid(padx=0,row=1,column=0)
 
 def FileSetWind():
     winNew = tk.Toplevel(root)
     winNew.geometry('600x450+374+182')
     winNew.title('文件设置')
-
-def CSSetWind():
-    winNew = tk.Toplevel(root)
-    winNew.geometry('600x450+374+182')
-    winNew.title('参数设置')
 
 def NewFile():  #新文件
     textPad.delete(1.0,tk.END)
@@ -75,7 +89,7 @@ def GetFile(): #读取文件
         textPad.insert(1.0,f.read())
         f.close()
 
-def SaveFile(): #另存文件
+def SaveFile(**kages): #另存文件
     filename = asksaveasfilename(initialfile = 'new',defaultextension ='.py')
     if filename != '':
         fh = open(filename,'w',encoding='utf-8',errors='ignore')
@@ -87,7 +101,6 @@ def EXEInfo():
     winNew = tk.Toplevel(root)
     winNew.geometry('600x450+374+182')
     winNew.title('软件信息')
-    ver = index.parse("config/config.json").json()
     lb = tk.Label(winNew,text=f'软件版本 : {ver["ExeVer"]}',relief='solid').pack()
     lb2 = tk.Label(winNew,text=f'核心版本 : {ver["version"]}',relief='solid').pack()
     lb3 = tk.Label(winNew,text=f'当前主题 : {ver["topic"]}',relief='solid').pack()
@@ -177,7 +190,18 @@ def no():
     else:
         pass
 
-StartEXE = tk.Button(root,text="运行程序",command=runpy,width=100,relief='solid').pack()
+def yhxy():
+    winNew = tk.Toplevel(root)
+    winNew.geometry('600x450+374+182')
+    winNew.title("用户协议")
+    f = "The MIT License (MIT)\
+\nCopyright (c) 2023  |  yydshmcl@outlook.com\
+\nPermission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”),\n to deal in the Software without restriction, \nincluding without limitation the rights to use, \ncopy, modify, merge, publish, distribute, sublicense, \nand/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:\
+\nThe above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.\
+\nThe Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability,\n fitness for a particular purpose and noninfringement. \nIn no event shall the authors or copyright \nholders be liable for any claim, damages or other liability, \nwhether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software."
+    lable = tk.Label(winNew,text=f).pack()
+
+StartEXE = ttk.Button(root,text="运行程序",command=runpy,width=100).pack()#,relief='solid'
 
 #菜单栏
 MenuBar = tk.Menu(root,bg="#000",fg="#FFF",relief='solid')
@@ -201,7 +225,7 @@ MenuBar.add_cascade(label="编辑", menu=EditMenu)
  
 # 创建另一个“设置”下拉菜单，然后将它添加到顶级菜单中
 settingmenu = tk.Menu(MenuBar, tearoff=False,bg="#000",fg="#FFF",relief='solid')
-settingmenu.add_command(label="参数设置", command=CSSetWind)
+settingmenu.add_command(label="参数设置", command=ConfigWind)
 settingmenu.add_command(label="文件设置", command=FileSetWind)
 settingmenu.add_command(label="IDE设置", command=IDESetWind)
 MenuBar.add_cascade(label="设置", menu=settingmenu)
@@ -211,21 +235,28 @@ helptmenu = tk.Menu(MenuBar,tearoff=False,bg="#000",fg="#FFF",relief='solid')
 helptmenu.add_command(label="关于我们", command=no)
 helptmenu.add_command(label="获取帮助", command=no)
 helptmenu.add_command(label="软件信息", command=EXEInfo)
+helptmenu.add_command(label="用户协议",command=yhxy)
 helptmenu.add_command(label="插件", command=Plugin)
 MenuBar.add_cascade(label="帮助", menu=helptmenu)
 
-menu = tk.Menu(root,bg="#000",fg="#FFF",tearoff=False,relief='solid')
-menu.add_cascade(label = '复制',command=no)
-menu.add_cascade(label = '粘贴',command=no)
-menu.add_cascade(label = '运行',command=runpy)
-showPopoutMenu(root, menu)
+menu_f = tk.Menu(FileTree,bg="#000",fg="#FFF",tearoff=False,relief='raised')
+menu_f.add_cascade(label = '新建',command=no)
+menu_f.add_cascade(label = '打开文件所在位置',command=no)
+menu_f.add_cascade(label = '复制路径',command=runpy)
+menu_f.add_cascade(label="重命名")
+showPopoutMenu(FileTree,menu_f)
+
+menu_f = tk.Menu(FileTree)
 
 # 显示菜单
+root.bind('<Control - s>',SaveFile)
+root.bind('<F9>',runpy)
 root.config(menu=MenuBar)
 
 #窗口设置
 root.iconphoto(True,tk.PhotoImage(file="image/cobweb.png"))
-root.bind('<F9>',runpy)
 root.geometry("600x450+374+182")
 root.title("清云IDE")
 root.mainloop()
+
+# pyinstaller
