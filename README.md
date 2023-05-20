@@ -33,3 +33,6 @@
 
 # plugin development？
 [【Plugin docs】]()
+
+# frequently asked questions
+[常见问题 | frequently asked questions](https://github.com/Buelie/Machine/tree/Docs/Docs/%E5%B8%B8%E8%A7%81%E9%97%AE%E9%A2%98)
