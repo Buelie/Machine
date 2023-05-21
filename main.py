@@ -24,13 +24,17 @@ ver = index.parse("config/config.json").json()
 root = tk.Tk()
 
 def Sys():
-    __data = os.name
-    if __data =='nt':
-        return '异常检测：【无】'
-    elif __data == 'java':
-        return '异常检测：【无】'
-    else:
-        return '您的操作系统或者运行环境非Windows或Java，可能会出现部分未知错误,异常检测：【未知错误】'
+    try:
+        __data = os.name
+        if __data =='nt':
+            return '异常检测：【无】'
+        elif __data == 'java':
+            return '异常检测：【无】'
+        else:
+            return '您的操作系统或者运行环境非Windows或Java，可能会出现部分未知错误,异常检测：【未知错误】'
+    except Exception as e:
+        __data = "检测异常：【"+e+"】"
+        return __data
 
 FileTree = ttk.Treeview(root)
 FTreeOne = FileTree.insert("", 0, "测试版", text="测试版，暂时无法显示文件树", values=("F1"))
