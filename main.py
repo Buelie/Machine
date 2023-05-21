@@ -15,6 +15,8 @@ import function.index
 import api
 from tkinter import ttk
 import os
+import platform
+
 index = function.index
 
 ver = index.parse("config/config.json").json()
@@ -24,9 +26,9 @@ root = tk.Tk()
 def Sys():
     __data = os.name
     if __data =='nt':
-        return '您的操作系统是Windows,异常检测：【无】'
+        return '异常检测：【无】'
     elif __data == 'java':
-        return '您的运行环境是Java,异常检测：【无】'
+        return '异常检测：【无】'
     else:
         return '您的操作系统或者运行环境非Windows或Java，可能会出现部分未知错误,异常检测：【未知错误】'
 
@@ -35,7 +37,7 @@ FTreeOne = FileTree.insert("", 0, "测试版", text="测试版，暂时无法显
 FtreeTwo = FileTree.insert(FTreeOne,1,"cs",text="了解更多请访问官网！！！", values=("F2"))
 FileTree.pack(side='left',anchor='w',fill='both')
 
-lable_sys = tk.Label(root,text=Sys())
+lable_sys = tk.Label(root,text=Sys()+" | 当前操作系统: ["+platform.system()+"]")
 lable_sys.pack(side='top',anchor='w')#fill='both'
 
 stickup = ""
@@ -68,10 +70,60 @@ def ConfigWind():
     winNew = tk.Toplevel(root)
     winNew.geometry('600x450+374+182')
     winNew.title('参数设置')
+    def dbxm():
+        def dbxm_file(path : str,main_file : str,mode : str,image : str) -> None:
+            os.system('cd '+path)
+            os.system(path[0:1])
+            if image != None or image != "" or image != '':
+                if mode == 'F':
+                    os.system('pyinstaller -F -w '+main_file+" -i "+image)
+                elif mode == 'D':
+                    os.system('pyinstaller -w '+main_file+" -i "+image)
+                else:
+                    print(Exception)
+            else:
+                if mode == 'F':
+                    os.system('pyinstaller -F -w '+main_file)
+                elif mode == 'D':
+                    os.system('pyinstaller -w '+main_file)
+                else:
+                    print(Exception)
+            return None
+        
+        
+
+        WinM = tk.Toplevel(root)
+        WinM.geometry('600x450+374+182')
+        WinM.title('打包项目')
+        try:
+            a = ""
+            Vsa = tk.BooleanVar()
+            PathLab = ttk.Label(WinM,text="项目路径:",width=10).grid(row=0,column=0)
+            PathInp = ttk.Entry(WinM,width=40,textvariable=a).grid(row=0,column=1)
+
+            b = ""
+            MainLab = ttk.Label(WinM,text="主文件路径:",width=10).grid(row=1,column=0)
+            MainInp = ttk.Entry(WinM,width=40,textvariable=b).grid(row=1,column=1)
+            
+            dxF = ttk.Radiobutton(WinM,text="打包单个文件",value="F").grid(row=2,column=0)
+            dxD = ttk.Radiobutton(WinM,text="打包整个项目",value="D").grid(row=2,column=1)
+
+            c = ""
+            imags = ""
+            ImageL = ttk.Label(WinM,text="图标路径:",width=10).grid(row=4,column=0)
+            Image = ttk.Entry(WinM,width=40,textvariable=c).grid(row=4,column=1)
+
+            
+            OK_Btn = ttk.Button(WinM,text="打包项目",command=lambda:dbxm_file(PathInp.get(),MainInp.get(),dxF.get(),Image.get())).grid(row=5,column=0)
+        except Exception as e:
+            WarLable = tk.Label(WinM,text="使用此功能，需要安装pyinstaller库!!!").grid(row=0,column=0)
+            ErrLable = tk.Label(WinM,text=e).grid(row=0,column=0)
+            print(e)
+
     hj_path = ""
     PathLab = ttk.Label(winNew,text=sys.path[5]+"\\python.exe",relief='solid').grid(row=0,column=1,columnspan=2)
     PathBtn = ttk.Button(winNew,text="更改解释器路径").grid(padx=0,row=0,column=0)
-    DabaoBtn = ttk.Button(winNew,text="打包项目").grid(padx=0,row=1,column=0)
+    DabaoBtn = ttk.Button(winNew,text="打包项目",command=dbxm).grid(padx=0,row=1,column=0)
 
 def FileSetWind():
     winNew = tk.Toplevel(root)
